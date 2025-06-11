@@ -3,6 +3,7 @@ from order.models import Order
 from product.models import Product
 from product.serializers.product_serializer import ProductSerializer
 
+
 class OrderSerializer(serializers.ModelSerializer):
     product = ProductSerializer(required=False, many=True, read_only=True)
     product_ids = serializers.PrimaryKeyRelatedField(
@@ -15,11 +16,11 @@ class OrderSerializer(serializers.ModelSerializer):
         return total
 
     def create(self, validated_data):
-        product_ids = validated_data.pop('product_ids')
+        product_ids = validated_data.pop("product_ids")
         order = Order.objects.create(**validated_data)
         order.product.set(product_ids)
         return order
 
     class Meta:
         model = Order
-        fields = ['user', 'product', 'product_ids', 'total']
+        fields = ["user", "product", "product_ids", "total"]
