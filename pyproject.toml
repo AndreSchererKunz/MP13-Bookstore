@@ -1,12 +1,12 @@
 [project]
-name = "mp13-bookstore"
+name = "mp13bookstore"
 version = "0.1.0"
 description = "Bookstore API"
 authors = [
     {name = "André Scherer Kunz",email = "andreschererkunzt@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "django (>=5.2.1,<6.0.0)",
     "djangorestframework (>=3.16.0,<4.0.0)",
@@ -16,6 +16,9 @@ dependencies = [
 ]
 
 [tool.poetry]
+packages = [
+    { include = "MP13Bookstore" }
+]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
