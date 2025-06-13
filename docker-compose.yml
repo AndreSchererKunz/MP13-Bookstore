@@ -10,7 +10,7 @@ services:
       - 8000:8000
     env_file:
       - ./env.dev
-    networks:
+    networks: #Network explícito
       - backend
     depends_on:
       - db
@@ -22,9 +22,9 @@ services:
       - POSTGRES_USER=bookstore_dev
       - POSTGRES_PASSWORD=bookstore_dev
       - POSTGRES_DB=bookstore_db
-    networks:
+    networks: #Network explícito
       - backend
-networks:
+networks: #Network explícito
   backend:
     driver: bridge
 
