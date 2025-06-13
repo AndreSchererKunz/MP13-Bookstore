@@ -3,6 +3,7 @@ from order.serializers import OrderSerializer
 from product.factories import ProductFactory, CategoryFactory
 from order.factories import OrderFactory, UserFactory
 
+
 class OrderSerializerTest(TestCase):
     def setUp(self):
         self.category = CategoryFactory()
@@ -15,15 +16,12 @@ class OrderSerializerTest(TestCase):
         data = serializer.data
         expected_total = sum(p.price for p in self.products)
 
-        self.assertEqual(data['total'], expected_total)
-        self.assertEqual(len(data['product']), 2)
+        self.assertEqual(data["total"], expected_total)
+        self.assertEqual(len(data["product"]), 2)
 
     def test_order_creation_with_product_ids(self):
         product_ids = [p.id for p in self.products]
-        data = {
-            'user': self.user.id,
-            'product_ids': product_ids
-        }
+        data = {"user": self.user.id, "product_ids": product_ids}
         serializer = OrderSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
 
