@@ -7,6 +7,10 @@ jobs:
     name: Quality check 
     runs-on: ubuntu-22.04
 
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
+      POETRY_HOME: $HOME/.local
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -16,20 +20,22 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Remove old poetry versions
+        run: |
+          pip uninstall poetry poetry-core -y || true
+          rm -rf $HOME/.local/share/pypoetry
+          rm -rf $HOME/.local/bin/poetry
+
       - name: Install poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-        env:
-          POETRY_HOME: $HOME/.local
 
       - name: Check poetry version
         run: poetry --version
 
       - name: Install dependencies
         run: poetry install
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
 
       - name: View poetry help
         run: poetry --help
