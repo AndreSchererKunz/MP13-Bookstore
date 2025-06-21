@@ -31,8 +31,14 @@ jobs:
 
       - name: Install poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          mkdir -p $HOME/.local/bin
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
+          echo "$HOME/.local/bin" >> $GITHUB_ENV
+
+      - name: Verifique instalação do Poetry
+        run: |
+          which poetry
+          poetry --version
 
       - name: Check poetry version
         run: poetry --version
