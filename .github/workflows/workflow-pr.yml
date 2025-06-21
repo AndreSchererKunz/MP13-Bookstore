@@ -1,0 +1,84 @@
+name: Python Pull Request Workflow 
+
+on: [pull_request]
+
+jobs:
+  qa:
+    name: Quality check 
+    runs-on: ubuntu-22.04
+
+    env:
+      POETRY_VIRTUALENVS_CREATE: false
+      POETRY_HOME: $HOME/.local
+      PATH: $HOME/.local/bin:$PATH
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Remove global Poetry (if exists)
+        run: |
+          rm -f /opt/hostedtoolcache/Python/*/x64/bin/poetry || true
+          pip uninstall poetry poetry-core -y || true
+          rm -rf $HOME/.local/bin/poetry
+          rm -rf $HOME/.local/share/pypoetry
+          rm -rf $HOME/.poetry
+
+      - name: Install poetry
+        run: |
+          mkdir -p $HOME/.local/bin
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.8.2
+          echo "$HOME/.local/bin" >> $GITHUB_ENV
+
+      - name: Check poetry version
+        run: poetry --version
+
+      - name: Configure Poetry to not create virtualenvs
+        run: poetry config virtualenvs.create false
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Check for pyproject.toml
+        run: |
+          if [ ! -f "pyproject.toml" ]; then
+            echo "❌ Arquivo pyproject.toml não encontrado!"
+            exit 1
+          fi
+
+      - name: Install dependencies with Poetry
+        run: |
+          poetry install --no-interaction || {
+            echo "❌ Falha ao instalar dependências com poetry!"
+            exit 1
+          }
+
+      - name: View poetry help
+        run: poetry --help
+
+      - name: Run Django tests
+        run: |
+          set -e
+          if [ -f "manage.py" ]; then
+            poetry run python manage.py test
+          else
+            echo "⚠️ manage.py não encontrado, pulando testes Django."
+          fi
+
+      - name: Wemake Python Stylguide
+        uses: wemake-services/wemake-python-styleguide@0.16.0
+        continue-on-error: true
+        with:
+          reporter: 'github-pr-review'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
