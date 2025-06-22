@@ -4,6 +4,9 @@ jobs:
   qa:
     name: Quality Assurance
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: dummy-key-for-tests
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

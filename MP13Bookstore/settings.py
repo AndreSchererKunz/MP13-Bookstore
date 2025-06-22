@@ -138,7 +138,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "dummy-secret-for-tests")
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
