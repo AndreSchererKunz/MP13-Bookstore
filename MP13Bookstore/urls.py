@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from django.http import HttpResponse
-from . import views
+from MP13Bookstore import views
 
 def home(request):
     return HttpResponse("🚀 A API está no ar! Veja /bookstore/v1/product/ ou /bookstore/v1/order/")
