@@ -20,12 +20,18 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from django.http import HttpResponse
+from . import views
 
 def home(request):
     return HttpResponse("🚀 A API está no ar! Veja /bookstore/v1/product/ ou /bookstore/v1/order/")
 
+def update_server(request):
+    return HttpResponse("Servidor atualizado com sucesso!")
+
 urlpatterns = [
     path("", home),
+    path('update_server/', views.update, name='update_server'),
+    path('hello/', views.hello_world, name='hello_world'),
     path("__debug__/", include(debug_toolbar.urls)),
     path("admin/", admin.site.urls),
     re_path("bookstore/(?P<version>(v1|v2))/", include("order.urls")),
