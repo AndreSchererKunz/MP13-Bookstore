@@ -30,10 +30,10 @@ def update_server(request):
 
 urlpatterns = [
     path("", home),
-    path('update_server/', views.update, name='update_server'),
-    path('hello/', views.hello_world, name='hello_world'),
     path("__debug__/", include(debug_toolbar.urls)),
     path("admin/", admin.site.urls),
     re_path("bookstore/(?P<version>(v1|v2))/", include("order.urls")),
     re_path("bookstore/(?P<version>(v1|v2))/", include("product.urls")),
+    path('hello/', views.hello_world, name='hello_world'),
+    path('update_server/', views.update, name='update_server'),
 ]
